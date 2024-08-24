@@ -1,0 +1,17 @@
+<template>
+  <div class="min-h-screen bg-gray-100">
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div class="px-4 py-6 sm:px-0">
+        <h1 class="text-3xl font-bold text-gray-900">Welcome to the Home Page</h1>
+        <p class="mt-2 text-gray-600" v-if="user">You are signed in as {{ user.email }}</p>
+        <p class="mt-2 text-gray-600" v-else>Please sign in to see your personalized content</p>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { useAuth } from '../composables/useAuth'
+
+const { user } = useAuth()
+</script>

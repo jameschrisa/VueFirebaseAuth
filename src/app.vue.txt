@@ -1,0 +1,47 @@
+<template>
+  <div class="min-h-screen bg-gray-100">
+    <nav class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <router-link to="/" class="flex-shrink-0 flex items-center">
+              Home
+            </router-link>
+          </div>
+          <div class="flex items-center">
+            <template v-if="!isAuthenticated">
+              <router-link to="/signin" class="text-gray-700 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium">
+                Sign In
+              </router-link>
+              <router-link to="/register" class="text-gray-700 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium">
+                Register
+              </router-link>
+            </template>
+            <button v-else @click="signOut" class="text-gray-700 hover:bg-gray-50 px-3 py-2 rounded-md text-sm font-medium">
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <router-view></router-view>
+  </div>
+</template>
+
+<script setup>
+import { useAuth } from './composables/useAuth'
+import { useRouter } from 'vue-router'
+
+const { isAuthenticated, signOut: firebaseSignOut } = useAuth()
+const router = useRouter()
+
+const signOut = async () => {
+  try {
+    await firebaseSignOut()
+    router.push('/signin')
+  } catch (error) {
+    console.error('Error signing out:', error)
+  }
+}
+</script>
