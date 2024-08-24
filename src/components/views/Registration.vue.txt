@@ -50,8 +50,36 @@ import { useRouter } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
 import { handleError } from '../utils/errorHandler'
+import zxcvbn from 'zxcvbn'
 
 const router = useRouter()
 const { register } = useAuth()
 
-const email =
+const email = ref('')
+const password = ref('')
+const error = ref('')
+const isLoading = ref(false)
+
+const isPasswordStrong = computed(() => {
+  const result = zxcvbn(password.value)
+  return result.score >= 3
+})
+
+const handleRegister = async () => {
+  if (!isPasswordStrong.value) {
+    error.value = 'Please choose a stronger password'
+    return
+  }
+
+  isLoading.value = true
+  error.value = ''
+  try {
+    await register(email.value, password.value)
+    router.push('/')
+  } catch (err) {
+    error.value = handleError(err)
+  } finally {
+    isLoading.value = false
+  }
+}
+</script>
